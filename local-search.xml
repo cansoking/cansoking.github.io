@@ -42,4 +42,17 @@
   
   
   
+  
+  
+  <entry>
+    <title>标题</title>
+    <link href="/"/>
+    <url>/</url>
+    
+    <content type="html"><![CDATA[<p>这里写关于页的正文，支持 Markdown, HTML</p>]]></content>
+    
+  </entry>
+  
+  
+  
 </search>
