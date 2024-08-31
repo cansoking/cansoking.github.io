@@ -1,0 +1,1221 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://ice.frostsky.com/2024/02/24/5f6950f974576f2696d884cb676f5a39.th.png">
+  <link rel="icon" href="https://ice.frostsky.com/2024/02/24/5f6950f974576f2696d884cb676f5a39.th.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#111111">
+  <meta name="author" content="Archie Wang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Redis常用数据类型及命令通用命令 查看所有键 keys命令可用于查看所有键，语法如下 1keys pattern  说明：pattern用于匹配key，其中*表示任意个任意字符，?表示一个任意字符。 示例： 1234127.0.0.1:6379&gt; KEYS *1) &quot;k3&quot;2) &quot;k2&quot;3) &quot;k1&quot;  注意：该命令会遍历Red">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Data Redis快速入门">
+<meta property="og:url" content="https://archiewang.site/2024/08/24/%E5%8D%9A%E5%AE%A2-2024-08-24-21-13-42/index.html">
+<meta property="og:site_name" content="Archie&#39;s Blog">
+<meta property="og:description" content="Redis常用数据类型及命令通用命令 查看所有键 keys命令可用于查看所有键，语法如下 1keys pattern  说明：pattern用于匹配key，其中*表示任意个任意字符，?表示一个任意字符。 示例： 1234127.0.0.1:6379&gt; KEYS *1) &quot;k3&quot;2) &quot;k2&quot;3) &quot;k1&quot;  注意：该命令会遍历Red">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/20240824211600.png">
+<meta property="article:published_time" content="2024-08-24T13:13:43.000Z">
+<meta property="article:modified_time" content="2024-08-31T10:28:11.003Z">
+<meta property="article:author" content="Archie Wang">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/20240824211600.png">
+  
+  
+  
+  <title>Spring Data Redis快速入门 - Archie&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"archiewang.site","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Archie&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://ice.frostsky.com/2024/04/05/d3e3862f8bc0f128b574be7e4d909c1f.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Spring Data Redis快速入门"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-24 21:13" pubdate>
+          2024年8月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="尚庭公寓后端项目知识记录"
+        id="heading-b81cd55add4f5dd289314a5c0c4cef08" role="tab" data-toggle="collapse" href="#collapse-b81cd55add4f5dd289314a5c0c4cef08"
+        aria-expanded="true"
+      >
+        尚庭公寓后端项目知识记录
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b81cd55add4f5dd289314a5c0c4cef08"
+           role="tabpanel" aria-labelledby="heading-b81cd55add4f5dd289314a5c0c4cef08">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/08/24/%E5%8D%9A%E5%AE%A2-2024-08-24-21-33-58/" title="Knife4j快速使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Knife4j快速使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/08/23/%E5%8D%9A%E5%AE%A2-2024-08-23-11-46-05/" title="MybatisPlus分页插件使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MybatisPlus分页插件使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/08/24/%E5%8D%9A%E5%AE%A2-2024-08-24-21-13-42/" title="Spring Data Redis快速入门"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Spring Data Redis快速入门</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Spring Data Redis快速入门</h1>
+            
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2024-08-31T18:28:11+08:00
+                  
+                  
+
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Redis常用数据类型及命令"><a href="#Redis常用数据类型及命令" class="headerlink" title="Redis常用数据类型及命令"></a>Redis常用数据类型及命令</h2><h3 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h3><ul>
+<li><p><strong>查看所有键</strong></p>
+<p><code>keys</code>命令可用于查看所有键，语法如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">keys pattern<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：pattern用于匹配key，其中<code>*</code>表示任意个任意字符，<code>?</code>表示一个任意字符。</p>
+<p>示例：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>:<span class="hljs-number">6379</span>&gt; KEYS *<br><span class="hljs-attribute">1</span>) <span class="hljs-string">&quot;k3&quot;</span><br><span class="hljs-attribute">2</span>) <span class="hljs-string">&quot;k2&quot;</span><br><span class="hljs-attribute">3</span>) <span class="hljs-string">&quot;k1&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：该命令会遍历Redis服务器中保存的所有键，因此当键很多时会影响整个Redis服务的性能，线上环境需要谨慎使用。</p>
+</li>
+<li><p><strong>键总数</strong></p>
+<p><code>dbsize</code>可用于查看键的总数，语法如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">dbsize<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>判断键是否存在</strong></p>
+<p><code>exists</code>命令可用于判断一个键是否存在，语法如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">exists key<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：若键存在则返回1，不存在则返回0。</p>
+</li>
+<li><p><strong>删除键</strong></p>
+<p><code>del</code>可用于删除指定键，语法如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">del key [key ...]<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：返回值为删除键的个数，若删除一个不存在的键，则返回0。</p>
+</li>
+<li><p><strong>查询键的剩余过期时间</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ttl key<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：<code>ttl</code>的含义为<strong>time to live</strong>，用于查询一个定时键的剩余存活时间，返回值以秒为单位。若查询的键的未设置过期时间，则返回<code>-1</code>，若查询的键不存在，则返回<code>-2</code>。</p>
+</li>
+<li><p><strong>数据库管理命令</strong></p>
+<p>Redis默认有编号为0~15的16个逻辑数据库，每个数据库之间的数据是相互独立的，所有连接默认使用的都是0号数据库。</p>
+<ul>
+<li><p><strong>切换数据库</strong></p>
+<p><code>select</code>命令可用于切换数据库，语法如下</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> <span class="hljs-keyword">index</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：若index超出范围，会报错</p>
+</li>
+<li><p><strong>清空数据库</strong></p>
+<p><code>flushdb</code>命令会清空当前所选用的数据库，<code>flushall</code>命令会清空0~15号所有的数据库。</p>
+<p><strong>注意</strong>：生产环境慎用</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="string类型"><a href="#string类型" class="headerlink" title="string类型"></a>string类型</h3><ol>
+<li><p><strong>概述</strong></p>
+<p>Redis中的string类型保存的是字节序列（Sequence of bytes），因此任意类型的数据，只要经过序列化之后都可以保存到Redis的string类型中，包括文本、数字甚至是一个对象。</p>
+</li>
+<li><p><strong>常用命令</strong></p>
+<ul>
+<li><p><strong>set</strong></p>
+<p><code>set</code>命令用于添加string类型的键值对，具体语法如下</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coq">SET key value [NX|<span class="hljs-type">XX</span>] [EX seconds|<span class="hljs-type">PX</span> milliseconds]<br></code></pre></td></tr></table></figure>
+
+<p>各选项含义如下</p>
+<ul>
+<li>NX：仅在key不存在时set</li>
+<li>XX：仅在key存在时set</li>
+<li>EX seconds：设置过期时间，单位为秒</li>
+<li>PX milliseconds：设置过期时间，单位为毫秒</li>
+</ul>
+</li>
+<li><p><strong>get</strong></p>
+<p><code>get</code>命令用于获取某个string类型的键对应的值，具体语法如下</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">GET</span> key<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>incr</strong></p>
+<p><code>incr</code>命令用于对数值做自增操作，具体语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">INCR key</span><br></code></pre></td></tr></table></figure>
+
+<p>若key对应的value是整数，则返回自增后的结果，若不是整数则报错，若key不存在则创建并返回1。</p>
+</li>
+<li><p><strong>decr</strong></p>
+<p><code>decr</code>命令用于对数值做自减操作，具体语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">DECR key</span><br></code></pre></td></tr></table></figure>
+
+<p>若key对应的value是整数，则返回自减后的结果，若不是整数则报错，若key不存在则创建并返回-1。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>应用场景</strong></p>
+<p>string类型常用于缓存、计数器等场景。</p>
+</li>
+</ol>
+<h3 id="list类型"><a href="#list类型" class="headerlink" title="list类型"></a>list类型</h3><ol>
+<li><p><strong>概述</strong></p>
+<p>list类型可用于存储多个string类型的元素，并且所有元素按照被添加的顺序存储。</p>
+</li>
+<li><p><strong>常用命令</strong></p>
+<p>list类型相关的命令较多，下面分类进行进行介绍。</p>
+<ul>
+<li><p><strong>添加元素</strong></p>
+<p>向列表中添加元素的命令有<code>lpush</code>、<code>rpush</code> 、<code>linsert</code>，各命令的功能与用法如下</p>
+<ul>
+<li><p><code>lpush</code></p>
+<p>该命令用于向list左侧添加元素，语法如下</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xquery">lpush<span class="hljs-built_in"> key</span> <span class="hljs-keyword">element</span> [<span class="hljs-keyword">element</span> ...]<br></code></pre></td></tr></table></figure>
+
+<p>示例</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">lpush l1 <span class="hljs-selector-tag">a</span> <span class="hljs-selector-tag">b</span> c<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>rpush</code></p>
+<p>该命令用于向list右侧添加元素，语法如下</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xquery">rpush<span class="hljs-built_in"> key</span> <span class="hljs-keyword">element</span> [<span class="hljs-keyword">element</span> ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>linsert</code></p>
+<p>该命令用于向list指定位置添加元素，语法如下</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">linsert</span> key before|<span class="hljs-keyword">after</span> pivot element<br></code></pre></td></tr></table></figure>
+
+<p>示例</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">linsert</span> l1 <span class="hljs-keyword">after</span> b new<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>查询元素</strong></p>
+<p>查询list元素的命令有<code>lindex</code>和<code>lrange</code>，各命令的功能与用法如下</p>
+<ul>
+<li><p><code>lindex</code></p>
+<p>该命令用于获取指定索引位置的元素，语法如下</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">lindex</span> key index<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：index从左到右依次是0，1，2…，从右到左依次是-1，-2，-3…</p>
+</li>
+<li><p><code>lrange</code></p>
+<p>该命令用于获取指定范围内的元素列表，语法如下</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">lrange</span> key start stop<br></code></pre></td></tr></table></figure>
+
+<p>示例</p>
+<p>获取list全部元素，命令如下</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">lrange</span> l1 <span class="hljs-number">0</span> <span class="hljs-number">-1</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>删除元素</strong></p>
+<p>删除list元素的命令有<code>lpop</code>、<code>rpop</code>、<code>lrem</code>，各命令的功能与用法如下</p>
+<ul>
+<li><p><code>lpop</code></p>
+<p>该命令用于移除并返回list左侧元素，语法如下</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q">lpop <span class="hljs-built_in">key</span> [<span class="hljs-built_in">count</span>]<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：count参数表示移除元素的个数</p>
+</li>
+<li><p><code>rpop</code></p>
+<p>该命令用于移除并返回list右侧的元素，语法如下</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q">rpop <span class="hljs-built_in">key</span> [<span class="hljs-built_in">count</span>]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>lrem</code></p>
+<p>该命令用于移除list中的指定元素，语法如下</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xquery">lrem<span class="hljs-built_in"> key</span><span class="hljs-built_in"> count</span> <span class="hljs-keyword">element</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：count参数表示要移除element元素的个数（list中可以存在多个相同的元素），count的用法如下</p>
+<ul>
+<li>若count&gt;0，则从左到右删除最多count个element元素</li>
+<li>若count&lt;0，则从右到左删除最多count（的绝对值）个element元素</li>
+<li>若count&#x3D;0，则删除所有的element元素</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>修改元素</strong></p>
+<p><code>lset</code>命令可用于修改指定索引位置的元素，语法如下</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">lset</span> key index element<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>其他</strong></p>
+<p><code>llen</code>命令可用于查看list长度，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">llen key</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>应用场景</strong></p>
+<ul>
+<li>社交应用中，可使用list缓存每个用户发布的最新的N条记录。</li>
+<li>list可用作异步消息队列。</li>
+</ul>
+</li>
+</ol>
+<h3 id="set类型"><a href="#set类型" class="headerlink" title="set类型"></a>set类型</h3><ol>
+<li><p><strong>概述</strong></p>
+<p>和list类型相似，set类型也可用来存储多个string类型的元素，但与list类型不同，set中的元素是无序的，且set中不会包含相同元素。</p>
+</li>
+<li><p><strong>常用命令</strong></p>
+<ul>
+<li><p><strong>集合内</strong></p>
+<ul>
+<li><p><strong>sadd</strong></p>
+<p>该命令用于向set中添加元素，语法如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sadd key member [member ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>smembers</strong></p>
+<p>该命令用于查询set中的全部元素，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">smembers key</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>srem</strong></p>
+<p>该命令用于移除set中的指定元素，语法如下</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">srem <span class="hljs-built_in">key</span> <span class="hljs-built_in">member</span> [<span class="hljs-built_in">member</span> ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>spop</strong></p>
+<p>该命令随机移除并返回set中的n个元素，语法如下</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q">spop <span class="hljs-built_in">key</span> [<span class="hljs-built_in">count</span>]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>srandmember</strong></p>
+<p>该命令随机返回set中的n个元素（不删除），语法如下</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">srandmember </span>key [<span class="hljs-built_in">count</span>]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>scard</strong>（Cardinality，基数）</p>
+<p>该命令用于查询set中的元素个数，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">scard key</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>sismember</strong></p>
+<p>该命令用于元素是否在set中，语法如下</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xquery">sismember<span class="hljs-built_in"> key</span> <span class="hljs-keyword">element</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>集合间</strong></p>
+<ul>
+<li><p><strong>sinter</strong></p>
+<p>该命令用于计算多个集合的交集，语法如下</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss">sinter <span class="hljs-built_in">key</span> [<span class="hljs-built_in">key</span> ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>sunion</strong></p>
+<p>该命令用于计算多个集合的并集，语法如下</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss">sunion <span class="hljs-built_in">key</span> [<span class="hljs-built_in">key</span> ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>sdiff</strong></p>
+<p>该命令用于计算多个集合的差集，语法如下</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss">sdiff <span class="hljs-built_in">key</span> [<span class="hljs-built_in">key</span> ...]<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>应用场景</strong></p>
+<p>set可用于计算共同关注好友，随机抽奖系统等等。</p>
+</li>
+</ol>
+<h3 id="hash类型"><a href="#hash类型" class="headerlink" title="hash类型"></a>hash类型</h3><ol>
+<li><p><strong>概述</strong></p>
+<p>hash类型类似于Java语言中的<code>HashMap</code>，可用于存储键值对。</p>
+</li>
+<li><p><strong>常用命令</strong></p>
+<ul>
+<li><p><strong>hset</strong></p>
+<p>该命令用于向hash中增加键值对，语法如下</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">hset</span> key <span class="hljs-meta">field</span> value [<span class="hljs-meta">field</span> value ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hget</strong></p>
+<p>该命令用于获取hash中某个键对应的值，语法如下</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">hget</span> key <span class="hljs-meta">field</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hdel</strong></p>
+<p>该命令用于删除hash中的指定的键值对，语法如下</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">hdel</span> key <span class="hljs-meta">field</span> [<span class="hljs-meta">field</span> ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hlen</strong></p>
+<p>该命令用于查询hash中的键值对个数，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">hlen key</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hexists</strong></p>
+<p>该命令用于判断hash中的某个键是否存在，语法如下</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">hexists</span> key <span class="hljs-meta">field</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hkeys</strong></p>
+<p>该命令用于返回hash中所有的键，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">hkeys key</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hvals</strong></p>
+<p>该命令用于返回hash中所有的值，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">hvals key</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hgetall</strong></p>
+<p>该命令用于返回hash中所有的键与值，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">hgetall key</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>应用场景</strong></p>
+<p>hash类型可用于缓存对象等。</p>
+</li>
+</ol>
+<h3 id="zset类型"><a href="#zset类型" class="headerlink" title="zset类型"></a>zset类型</h3><ol>
+<li><p><strong>概述</strong></p>
+<p>zset（sorted set）被称为有序集合，同set相似，zset中也不会包含相同元素，但不同的是，zset中的元素是有序的。并且zset中的元素并非像list一样按照元素的插入顺序排序，而是按照每个元素的分数（score）排序。</p>
+</li>
+<li><p><strong>常用命令</strong></p>
+<ul>
+<li><p><strong>zadd</strong></p>
+<p>该命令用于向zset中添加元素，语法如下</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">ZADD <span class="hljs-built_in">key</span> [NX|XX] score <span class="hljs-built_in">member</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li>NX：仅当member不存在时才add</li>
+<li>XX：仅当member存在时才add</li>
+</ul>
+</li>
+<li><p><strong>zcard</strong></p>
+<p>该命令用于计算zset中的元素个数，语法如下</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">zcard key</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>zscore</strong></p>
+<p>改名用于查看某个元素的分数，语法如下</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">zscore <span class="hljs-built_in">key</span> <span class="hljs-built_in">member</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>zrank&#x2F;zrevrank</strong></p>
+<p>这组命令用于计算元素的排名，其中zrank按照score的升序排序，zrevrank则按照降序排序，语法如下</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">zrank/zrevrank <span class="hljs-built_in">key</span> <span class="hljs-built_in">member</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong>名次从0开始。</p>
+</li>
+<li><p><strong>zrem</strong></p>
+<p>该命令用于删除元素，语法如下</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">zrem <span class="hljs-built_in">key</span> <span class="hljs-built_in">member</span> [<span class="hljs-built_in">member</span> ...]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>zincrby</strong> </p>
+<p>该命令用于增加元素的分数，语法如下</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">zincrby <span class="hljs-built_in">key</span> increment <span class="hljs-built_in">member</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>zrange</strong></p>
+<p>该命令用于查询指定区间范围的元素，语法如下</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">zrange key start <span class="hljs-selector-tag">stop</span> <span class="hljs-selector-attr">[byscore]</span> <span class="hljs-selector-attr">[rev]</span> <span class="hljs-selector-attr">[limit offset count]</span> <span class="hljs-selector-attr">[withscores]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li>start&#x2F;stop：用于指定查询区间，但是在不同模式下，其代表的含义也不相同<ul>
+<li>默认模式下，<code>start~stop</code>表示的是名次区间，且该区间为闭区间。名次从0开始，且可为负数，-1表示倒数第一，-2表示倒数第二，以此类推。</li>
+<li>byscore模式下（声明了byscore参数），则<code>start~stop</code>表示的就是分数区间，该区间默认仍为闭区间。在该模式下，可以在<code>start</code>或<code>stop</code>前增加<code>(</code>来表示开区间，例如<code>(1 (5</code>，表示的就是<code>(1,5)</code>这个开区间。除此之外，还可以使用<code>-inf</code>和<code>+inf</code>表示负无穷和正无穷。</li>
+</ul>
+</li>
+<li>byscore：用于切换到分数模式</li>
+<li>rev：表示降序排序。在byscore模式下使用rev参数需要注意查询区间，start应大于stop。</li>
+<li>limit：该选项只用于byscore模式，作用和sql语句中的limit一致</li>
+<li>withscores：用于打印分数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>应用场景</strong></p>
+<p>zset主要用于各种排行榜。</p>
+</li>
+</ol>
+<h2 id="SpringBoot整合Redis"><a href="#SpringBoot整合Redis" class="headerlink" title="SpringBoot整合Redis"></a>SpringBoot整合Redis</h2><h3 id="Spring-Data-Redis概述"><a href="#Spring-Data-Redis概述" class="headerlink" title="Spring Data Redis概述"></a>Spring Data Redis概述</h3><p><strong>Spring Data Redis</strong> 是Spring大家族中的一个子项目，主要用于Spring程序和Redis的交互。它基于的Redis Java客户端（<a target="_blank" rel="noopener" href="https://github.com/redis/jedis">Jedis</a>和<a target="_blank" rel="noopener" href="https://lettuce.io/">Lettuce</a>）做了抽象，提供了一个统一的编程模型，使得Spring程序与Redis的交互变得十分简单。</p>
+<p><strong>Spring Data Redis</strong> 中有一个十分重要的类——<code>RedisTemplate</code>，它封装了与Redis进行的交互的各种方法，我们主要用使用它与Redis进行交互。</p>
+<h3 id="Spring-Data-Redis快速入门"><a href="#Spring-Data-Redis快速入门" class="headerlink" title="Spring Data Redis快速入门"></a>Spring Data Redis快速入门</h3><ol>
+<li><p><strong>创建SpringBoot项目</strong></p>
+</li>
+<li><p><strong>引入Maven依赖</strong></p>
+<p>Spring Boot提供了对Spring Data Redis的支持，在Spring Boot项目中可以直接引入<code>spring-boot-starter-data-redis</code>来完成Spring Data Redis的自动配置，具体依赖如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>配置application.yml文件</strong></p>
+<p>在<code>application.yml</code>文件中增加如下参数，端口默认为<code>6379</code>，若没有密码，<code>password</code>字段可不写</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">data:</span><br>    <span class="hljs-attr">redis:</span><br>      <span class="hljs-attr">host:</span> <span class="hljs-string">xxx.xxx.xxx.xxx</span><br>      <span class="hljs-attr">password:</span> <span class="hljs-string">xxxxxx</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br>      <span class="hljs-attr">database:</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>RedisTemplate使用</strong></p>
+<p>由于<code>spring-boot-starter-data-redis</code>中提供了<code>RedisTemplate</code>的自动配置，所以我们可以将<code>RedisTemplate</code>注入自己的类中，如下边的案例所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestRedisTemplate</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> RedisTemplate redisTemplate;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testRedisTemplate</span><span class="hljs-params">()</span> &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>根据Redis的数据类型，RedisTemplate对各种交互方法做了分组，以下是常用的几个分组</p>
+<table>
+<thead>
+<tr>
+<th align="left">分组</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>redisTemplate.opsForValue()</code></td>
+<td align="left">操作string类型的方法</td>
+</tr>
+<tr>
+<td align="left"><code>redisTemplate.opsForList()</code></td>
+<td align="left">操作list类型的方法</td>
+</tr>
+<tr>
+<td align="left"><code>redisTemplate.opsForSet()</code></td>
+<td align="left">操作set类型的方法</td>
+</tr>
+<tr>
+<td align="left"><code>redisTemplate.opsForHash()</code></td>
+<td align="left">操作hash类型的方法</td>
+</tr>
+<tr>
+<td align="left"><code>redisTemplate.opsForZSet()</code></td>
+<td align="left">操作zset类型的方法</td>
+</tr>
+<tr>
+<td align="left"><code>redisTemplate</code></td>
+<td align="left">通用方法</td>
+</tr>
+</tbody></table>
+<p>下面简单测试几个简单的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestRedisTemplate</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> RedisTemplate redisTemplate;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSet</span><span class="hljs-params">()</span> &#123;<br>        redisTemplate.opsForValue().set(<span class="hljs-string">&quot;key1&quot;</span>, <span class="hljs-string">&quot;value1&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testGet</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> (String) redisTemplate.opsForValue().get(<span class="hljs-string">&quot;key1&quot;</span>);<br>        System.out.println(result);<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testDel</span><span class="hljs-params">()</span> &#123;<br>        redisTemplate.delete(<span class="hljs-string">&quot;key1&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>序列化问题</strong></p>
+<ul>
+<li><p><strong>问题演示</strong></p>
+<ul>
+<li><p><strong>问题一</strong></p>
+<p>使用RedisTemplate向Redis中增加一个键值对</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">redisTemplate.opsForValue().set(<span class="hljs-string">&quot;key2&quot;</span>,<span class="hljs-string">&quot;value2&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>使用RedisTemplate查询key2所对应的value，有结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">redisTemplate.opsForValue().get(<span class="hljs-string">&quot;key2&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>使用命令行客户端查询key2所对应的value，无结果</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">get</span> key2<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>问题二</strong></p>
+<p>在图形化客户端或者命令行客户端观察key2，显示异常</p>
+</li>
+</ul>
+</li>
+<li><p><strong>问题说明</strong></p>
+<p>上述问题的根本原因是，Redis中的key和value均是以二进制的形式存储的，因此客户端输入的key和value都会经过序列化之后才发往Redis服务端。而RedisTemplate所使用序列化方式和命令行客户端采用序列化方式不相同，进而导致序列化之后的二进制数据不同，所以才会导致上述的现象。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>StringRedisTemplate使用</strong></p>
+<p>为解决上述问题，可使用<code>StringRedisTemplate</code>代替<code>RedisTemplate</code>，因为<code>StringRedisTemplate</code>使用的序列化器和命令行所使用的序列化器是相同的。</p>
+<p><code>spring-boot-starter-data-redis</code>同样提供了<code>StringRedisTemplate</code>的自动配置，因此我们也可以直接将其注入到自己的类中。实例代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestStringRedisTemplate</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> StringRedisTemplate redisTemplate;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSet</span><span class="hljs-params">()</span> &#123;<br>        redisTemplate.opsForValue().set(<span class="hljs-string">&quot;key4&quot;</span>, <span class="hljs-string">&quot;value4&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testGet</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> redisTemplate.opsForValue().get(<span class="hljs-string">&quot;key4&quot;</span>);<br>        System.out.println(result);<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testDel</span><span class="hljs-params">()</span> &#123;<br>        redisTemplate.delete(<span class="hljs-string">&quot;key4&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B0%9A%E5%BA%AD%E5%85%AC%E5%AF%93%E5%90%8E%E7%AB%AF%E9%A1%B9%E7%9B%AE%E7%9F%A5%E8%AF%86%E8%AE%B0%E5%BD%95/" class="category-chain-item">尚庭公寓后端项目知识记录</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/Spring/" class="print-no-link">#Spring</a>
+      
+        <a href="/tags/Redis/" class="print-no-link">#Redis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Spring Data Redis快速入门</div>
+      <div>https://archiewang.site/2024/08/24/博客-2024-08-24-21-13-42/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Archie Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年8月31日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/08/24/%E5%8D%9A%E5%AE%A2-2024-08-24-21-33-58/" title="Knife4j快速使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Knife4j快速使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/24/%E5%8D%9A%E5%AE%A2-2024-08-24-00-22-58/" title="Hexo博客-Fluid主题-Waline评论系统-Vercel免费部署">
+                        <span class="hidden-mobile">Hexo博客-Fluid主题-Waline评论系统-Vercel免费部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://example.archiewang.site/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      Welcome to my blog!
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
