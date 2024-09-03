@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Nacos在Windows部署配置</title>
+    <link href="/2024/09/03/%E5%8D%9A%E5%AE%A2-2024-09-03-20-32-06/"/>
+    <url>/2024/09/03/%E5%8D%9A%E5%AE%A2-2024-09-03-20-32-06/</url>
+    
+    <content type="html"><![CDATA[<p>1、下载<br>下载地址：<a href="https://github.com/alibaba/nacos/releases%EF%BC%8C%E4%B8%8B%E8%BD%BD%E5%90%8E%E7%BC%80%E5%90%8D%E4%B8%BA.zip%E7%9A%84%E6%96%87%E4%BB%B6">https://github.com/alibaba/nacos/releases，下载后缀名为.zip的文件</a></p><p><img src="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/image-20240903212341404.png" alt="image-20240903212341404"></p><p>2、安装与配置<br>（1）下载之后，直接解压<br>（2）进入conf&#x2F;目录，找到application.properties文件，可以进行修改nacos服务的端口，以及可以配置数据库连接，进行数据持久化，如下图，其中数据库名称需要与后面对应</p><p><img src="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/image-20240903212627033.png" alt="image-20240903212627033"></p><p>（3）创建一个名为<code>nacos</code>的数据库，在该数据库执行安装目录<code>conf/</code>下的<code>mysql-schema.sql</code>文件对数据库进行初始化，初始化后的表如图所示。</p><p><img src="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/image-20240903212854692.png" alt="image-20240903212854692"></p><p>（4）配置登录用户名和密码，执行以下sql语句插入登录用户信息，插入后的用户名和密码均为<code>nacos</code></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> users (username, PASSWORD, enabled) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;nacos&#x27;</span>, <span class="hljs-string">&#x27;$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu&#x27;</span>, <span class="hljs-literal">TRUE</span>);<br> <br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> roles (username, role) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;nacos&#x27;</span>, <span class="hljs-string">&#x27;ROLE_ADMIN&#x27;</span>);<br></code></pre></td></tr></table></figure><p>（5）配置鉴权，编辑文件<code>conf/application.properties</code>，其中将<code>nacos.core.auth.enabled</code>设为<code>true</code>，<code>nacos.core.auth.plugin.nacos.token.secret.key</code>是用于生成JWT令牌的<code>SecretKey</code>，可以使用随机字符生成器进行生成，长度不可低于32位，另外<code>nacos.core.auth.server.identity.key</code>和<code>nacos.core.auth.server.identity.value</code>不能为空，可以自定义内容，如下图。</p><p>随机字符生成器：<a href="http://tool.pfan.cn/random">随机字符串生成 - 程序员工具箱 - 在线工具 (pfan.cn)</a></p><p><img src="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/image-20240903213143481.png" alt="image-20240903213143481"></p><p>3、启动Nacos</p><p>随后进入到安装目录的<code>bin/</code>目录下，使用命令<code>.\startup.cmd -m standalone</code>以<code>standalone</code>方式启动Nacos，出现以下提示即为启动成功</p><p><img src="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/image-20240903230215550.png" alt="image-20240903230215550"></p><p>之后进入Console后的地址即可使用用户名和密码<code>nacos</code>进行登录</p><p><img src="https://cdn.jsdelivr.net/gh/cansoking/blog-pictures@master/image-20240903230304210.png" alt="image-20240903230304210"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>仿斗鱼项目知识记录</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Nacos</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>”もらいます”和”くれます”的区别</title>
     <link href="/2024/09/02/%E5%8D%9A%E5%AE%A2-2024-09-02-14-02-02/"/>
     <url>/2024/09/02/%E5%8D%9A%E5%AE%A2-2024-09-02-14-02-02/</url>
